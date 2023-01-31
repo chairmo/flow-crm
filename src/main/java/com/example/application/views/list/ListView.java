@@ -1,8 +1,10 @@
 package com.example.application.views.list;
 
 import java.util.Collections;
+import java.util.List;
 
 import com.example.application.data.entity.Contact;
+import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,19 +21,18 @@ public class ListView extends VerticalLayout {
 	Grid<Contact> grid = new Grid<>(Contact.class);
 	TextField textFilter = new TextField();
 	ContactForm form;
+	CrmService service;
 
-    public ListView() {
+    public ListView(CrmService service) {
+    	this.service = service;
     	addClassName("list-view");
     	setSizeFull();
        
        configuredGrid();
        configureForm();
        
-       add(
-    		   getToolbar(),
-    		   getContent()
-    		   
-    		   );    	
+       add(getToolbar(), getContent());
+       updateList();
     }
     
     public Component getContent() {
@@ -44,7 +45,7 @@ public class ListView extends VerticalLayout {
     	return content;
     }
     public void configureForm() {
-    	form = new ContactForm(Collections.emptyList(), Collections.emptyList());
+    	form = new ContactForm(service.findAllCompanies(), service.findAllStatuses());
     	form.setWidth("25em");
     }
     
@@ -62,6 +63,7 @@ public class ListView extends VerticalLayout {
     	textFilter.setClearButtonVisible(true);
     	textFilter.setValueChangeMode(ValueChangeMode.LAZY);
     	textFilter.setPlaceholder("filter name...");
+    	textFilter.addValueChangeListener(e -> updateList());
     	
     	Button button = new Button("add contact");
     	
@@ -69,6 +71,9 @@ public class ListView extends VerticalLayout {
     	toolbar.setClassName("toolbar");
     	
     	return toolbar;
+    }
+    private void updateList(){
+    	grid.setItems(service.findAllContacts(textFilter.getValue()));
     }
 
 }
