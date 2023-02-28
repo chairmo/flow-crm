@@ -1,5 +1,7 @@
 package com.example.application.views.list;
 
+import javax.annotation.security.PermitAll;
+
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.charts.Chart;
@@ -11,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 
+@PermitAll
 @Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView  extends VerticalLayout{
 	private static final long serialVersionUID = 1L;
